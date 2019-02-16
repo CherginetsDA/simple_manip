@@ -1,5 +1,11 @@
 clear all
-hold on
+
+%TIME - time trajectory working
+%freq - frequency for send points
+%garm - how many garmonics you need
+%lim_angle and lim_velos - limits for angle and velosity what set at
+%   manipulator
+%t - time for plot; for example:  plot(t,q);
 TIME = 180;
 freq = 8;
 garm = 6;
