@@ -6,11 +6,12 @@ clear all
 %lim_angle and lim_velos - limits for angle and velosity what set at
 %   manipulator
 %t - time for plot; for example:  plot(t,q);
-TIME = 180;
-freq = 8;
+name='comau';
+TIME = 60;
+freq = 125;
 garm = 6;
-lim_angle = [[-pi;pi],[-pi;0],[-2.52;2.52],[-pi;pi],[-pi/2;pi/2],[-pi;pi]];
+lim_angle = [[-0.8;0.8],[-1.48;0.6],[-2.967;0],[-3.66;3.66],[-2.26;2.26],[-47;47]];
 lim_velos = [[-2;2],[-2;2],[-3;3],[-3;3],[-3;3],[-3;3]];
 [t,q, dq, ddq] = ava(lim_angle,lim_velos,garm,freq,TIME);
-save_file(q,dq,ddq);
+save_file(name,q,dq,ddq);
 
