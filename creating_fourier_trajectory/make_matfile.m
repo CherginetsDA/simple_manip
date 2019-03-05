@@ -1,5 +1,9 @@
 function make_matfile(name,folder_name,a,b,t_s,q0,w0,freq,TIME)
-param_file_name = [folder_name,'/trajectory_param.mat'];
+sf = strfind(folder_name,'/');
+sf = sf(size(sf,2));
+folder_name = char(folder_name);
+filename = folder_name(sf:size(folder_name,2));
+param_file_name = [folder_name,filename,'.mat'];
 file = matfile(param_file_name,'Writable',true);
 file.a=a;
 file.b=b;

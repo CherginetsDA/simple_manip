@@ -17,16 +17,16 @@ function save_file_full_data(name,q,dq,ddq,a,b,t_s,q0,w0,freq,TIME)
           header_string_json = [header_string_json,',',header_json{i}];
        end
        
-       fid = fopen(['collision',num2str(freq),'.csv'],'w');
+       fid = fopen(['collision-',num2str(freq),'.csv'],'w');
        fprintf(fid,'%s\r\n',header_string_coll);
        fclose(fid);
        
-       dlmwrite(['collision',num2str(freq),'.csv'],qqq ,'-append','delimiter',',');
+       dlmwrite(['collision-',num2str(freq),'.csv'],qqq ,'-append','delimiter',',');
        
-       fid = fopen(['trajectory',num2str(freq),'.csv'],'w');
+       fid = fopen(['trajectory-',num2str(freq),'.csv'],'w');
        fprintf(fid,'%s\r\n',header_string_json);
        fclose(fid);
-       dlmwrite(['trajectory',num2str(freq),'.csv'], q,'-append','delimiter',',');
+       dlmwrite(['trajectory-',num2str(freq),'.csv'], q,'-append','delimiter',',');
        
        csvwrite('speed.csv',dq);
        csvwrite('acceleration.csv',ddq);

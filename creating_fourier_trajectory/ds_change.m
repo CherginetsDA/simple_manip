@@ -1,8 +1,9 @@
 function q = ds_change(path,k,freq,save_path)
+    sf = strfind(path,'/');
+    sf = sf(size(sf,2));
+    path = char(path);
+    filename = path(sf:size(path,2)-4);
     if nargin < 4
-        sf = strfind(path,'/');
-        sf = sf(size(sf,2));
-        path = char(path);
         save_path = path(1:sf);
     else
         save_path = char(save_path);
@@ -18,7 +19,6 @@ function q = ds_change(path,k,freq,save_path)
     end
     a = file.a;
     b = file.b;
-    name = file.name;
     TIME = file.TIME/k;
     q0=file.q0;
     w0=file.w0*k;
@@ -40,10 +40,10 @@ function q = ds_change(path,k,freq,save_path)
     end
     
     eval(['cd '  save_path]);
-    fid = fopen([name,num2str(freq),'.csv'],'w');
+    fid = fopen([save_path,filename,'-',num2str(freq),'-',num2str(k),'.csv'],'w');
     fprintf(fid,'%s\r\n',header_string_json);
     fclose(fid);
-    dlmwrite([name, num2str(freq),'.csv'], q,'-append','delimiter',',');
+    dlmwrite([save_path,filename,'-', num2str(freq),'-',num2str(k),'.csv'], q,'-append','delimiter',',');
     eval(['cd ' current_path]);
 end
 
