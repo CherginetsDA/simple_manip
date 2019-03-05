@@ -1,5 +1,5 @@
 %function for generated trajectory 
-function [t,q,dq,ddq] = ava(lim_angle,lim_velos,garm,freq,TIME)
+function [t,q,dq,ddq,a,b,t_s,q0,w0] = ava(lim_angle,lim_velos,garm,freq,TIME)
 %frame - count of joints
 %q0,dq0,ddq0 - inital param
 %a and b - koeff of equation
@@ -23,19 +23,19 @@ for n = 1:frame
     end
 end
 %created trajectory
-q=angle(t_s,t,w0,a,b,q0,garm);
+q=angle(t_s,t,w0,a,b,q0);
 %change range angles for frame
 for n = 1:frame
     a(:,n)=a(:,n)*a_lim(n)/(max(q(:,n))-min(q(:,n)));
     b(:,n)=b(:,n)*a_lim(n)/(max(q(:,n))-min(q(:,n)));
 end
 %Inital offset for angle
-q=angle(t_s,t,w0,a,b,q0,garm);
+q=angle(t_s,t,w0,a,b,q0);
 q0=max(lim_angle)-max(q);
-dq=speed(t_s,t,w0,a,b,dq0,garm);
+dq=speed(t_s,t,w0,a,b,dq0);
 %change frequency range
 w0=w0.*max(lim_velos)./max(abs(dq));
-dq=speed(t_s,t,w0,a,b,dq0,garm);
+dq=speed(t_s,t,w0,a,b,dq0);
 
 %add time offset what angle start then velos equaled zero.
 for i =1:size(t,1)
@@ -47,9 +47,9 @@ for i =1:size(t,1)
     end
 end
 %generated finish angle.velos and accel
-q=angle(t_s,t,w0,a,b,q0,garm);
-dq=speed(t_s,t,w0,a,b,dq0,garm);
-ddq=acceleration(t_s,t,w0,a,b,ddq0,garm);
+q=angle(t_s,t,w0,a,b,q0);
+dq=speed(t_s,t,w0,a,b,dq0);
+ddq=acceleration(t_s,t,w0,a,b,ddq0);
 end
 
 
