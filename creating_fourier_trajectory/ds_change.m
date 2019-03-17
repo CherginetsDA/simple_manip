@@ -2,7 +2,7 @@ function q = ds_change(path,k,freq,save_path)
     sf = strfind(path,'/');
     sf = sf(size(sf,2));
     path = char(path);
-    filename = path(sf:size(path,2)-4);
+    filename = path(sf+1:size(path,2)-4);
     if nargin < 4
         save_path = path(1:sf);
     else
@@ -44,6 +44,16 @@ function q = ds_change(path,k,freq,save_path)
     fprintf(fid,'%s\r\n',header_string_json);
     fclose(fid);
     dlmwrite([save_path,filename,'-', num2str(freq),'-',num2str(k),'.csv'], q,'-append','delimiter',',');
+    
+    
+    joints = q;
+    jid = fopen([save_path,filename,'-',num2str(freq),'-',num2str(k),'.json'],'w');
+    if jid == -1
+        error('File is not opened'); 
+    end
+    ts=t*1e6;
+    fwrite(jid,jsonencode(struct('name','follow_trajectory','targets',table(joints,ts))),'char');
+    fclose(jid);
     eval(['cd ' current_path]);
 end
 

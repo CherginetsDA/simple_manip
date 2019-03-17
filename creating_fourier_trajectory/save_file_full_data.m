@@ -8,6 +8,7 @@ function save_file_full_data(name,q,dq,ddq,a,b,t_s,q0,w0,freq,TIME)
        
        make_matfile(name,folder_name,a,b,t_s,q0,w0,freq,TIME);
        eval(['cd '  folder_name]);
+       eval(['mkdir json_files'])
        
        
        header_string_coll = header_coll{1};
