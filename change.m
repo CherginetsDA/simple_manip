@@ -1,5 +1,8 @@
+addpath(genpath('creating_fourier_trajectory'))
+
+%%
 %Enter path to .mat file with parameters yours trajectory
-path="/home/cherginets/simple_manip/data/ur10_2019-09-21_1421/ur10_2019-09-21_1421.mat";
+path="/home/cherginets/simple_manip/data/test_2020-03-06_0352/test_2020-03-06_0352.mat";
 
 %Enter the path where save the .csv file, if you want to choice where save file.
 %And use   ds_change(path,k,freq,save_path);
@@ -10,28 +13,19 @@ path="/home/cherginets/simple_manip/data/ur10_2019-09-21_1421/ur10_2019-09-21_14
 k=1;
 
 %Enter the frequency of discrediting time, if you want to use the default value, enter 0
-freq = 125;
+freq = 100;
 
 %It should work!
 % ds_change(path,k,freq);
 
-k=0.6;
-freq = 125;
+k=0.1;
+freq = 500;
 ds_change(path,k,freq);
 
-
-k=0.3;
-freq = 125;
+k= 0.5;
+freq = 500;
 ds_change(path,k,freq);
-
-
-k=0.95;
-freq = 125;
+% 
+k= 1;
+freq = 500;
 ds_change(path,k,freq);
-
-k= 0.95;
-freq = 150;
-ds_change(path,k,freq);
-
-
-

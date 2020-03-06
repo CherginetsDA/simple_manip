@@ -12,7 +12,7 @@ function q = ds_change(path,k,freq,save_path)
         end
     end
     current_path = pwd;
-    header_json = {'target_q_0', 'target_q_1', 'target_q_2', 'target_q_3', 'target_q_4', 'target_q_5'};
+%     header_json = {'arm_joint_1', 'arm_joint_2', 'arm_joint_3', 'arm_joint_4', 'arm_joint_5', 'arm_joint_6'};
     file = matfile(path);
     if freq == 0
        freq = file.freq; 
@@ -23,31 +23,51 @@ function q = ds_change(path,k,freq,save_path)
     q0=file.q0;
     w0=file.w0*k;
     t_s=file.t_s/k;
+    header_json = file.header;
+    content = file.content;
+    frame = max(size(w0));
     
     
     t=[0:1/freq:TIME]';
-    q = zeros(size(t,1),size(q0,2)); 
-    for i = 1:size(q0,2)
-        q(:,i)=q0(i);
-        for n =1:size(a,1) 
-        q(:,i) = q(:,i) + a(n,i)*sin(n*w0(i)*(t_s(i)+t)) + b(n,i)*cos(n*w0(i)*(t_s(i)+t));
+    q=angle(t_s,t,w0,a,b,q0);
+    dq=speed(t_s,t,w0,a,b,zeros(1,frame));
+    ddq=acceleration(t_s,t,w0,a,b,zeros(1,frame));
+    
+    N = max(size(q));
+    for j = 1:frame
+        i = N;
+        while abs(dq(i,j))>0.005
+            dq(i,j) = 0;
+            ddq(i,j) = 0;
+            i = i - 1;
         end
-    end 
+        q(i:N,j)=ones(N-i+1,1)*q(i-1,j);
+    end
     
     header_string_json = header_json{1};
     for i = 2:length(header_json)
         header_string_json = [header_string_json,',',header_json{i}];
     end
     
+    if contains(content,'p')
+        data = q;
+    end
+    if contains(content,'v')
+        data = [data,dq];
+    end
+    if contains(content,'a')
+        data = [data,ddq];
+    end
+    
     eval(['cd '  save_path]);
     fid = fopen([save_path,filename,'-',num2str(freq),'-',num2str(k),'.csv'],'w');
     fprintf(fid,'%s\r\n',header_string_json);
     fclose(fid);
-    dlmwrite([save_path,filename,'-', num2str(freq),'-',num2str(k),'.csv'], q,'-append','delimiter',',');
+    dlmwrite([save_path,filename,'-', num2str(freq),'-',num2str(k),'.csv'], data,'-append','delimiter',',');
     
-    
+
     joints = q;
-    jid = fopen([save_path,filename,'-',num2str(freq),'-',num2str(k),'.json'],'w');
+    jid = fopen([save_path,'json_files/',filename,'-',num2str(freq),'-',num2str(k),'.json'],'w');
     if jid == -1
         error('File is not opened'); 
     end

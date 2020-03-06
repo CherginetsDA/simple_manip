@@ -6,6 +6,7 @@ function [t,q,dq,ddq,a,b,t_s,q0,w0] = ava(lim_angle,lim_velos,garm,freq,TIME)
 %a_lim - range workespace
 %t_s - time offset for velos
 t=[0:1/freq:TIME]';
+N = size(t,1);
 frame = size(lim_angle,2);
 q0 = zeros(1,frame);
 dq0 = zeros(1,frame);
@@ -38,9 +39,9 @@ w0=w0.*max(lim_velos)./max(abs(dq));
 dq=speed(t_s,t,w0,a,b,dq0);
 
 %add time offset what angle start then velos equaled zero.
-for i =1:size(t,1)
+for i = 1:N
     for j = 1:frame
-        if abs(dq(i,j))<0.05
+        if abs(dq(i,j))<0.005
             t_s(j)=t(i); 
             break;
         end
@@ -50,6 +51,14 @@ end
 q=angle(t_s,t,w0,a,b,q0);
 dq=speed(t_s,t,w0,a,b,dq0);
 ddq=acceleration(t_s,t,w0,a,b,ddq0);
+
+for j = 1:frame
+    i = N;
+    while abs(dq(i,j))>0.005
+    dq(i,j) = 0;
+    ddq(i,j) = 0;
+    i = i - 1;
+    end
+    q(i:N,j)=ones(N-i+1,1)*q(i-1,j);
 end
-
-
+end
