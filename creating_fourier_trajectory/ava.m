@@ -61,4 +61,5 @@ for j = 1:frame
     end
     q(i:N,j)=ones(N-i+1,1)*q(i-1,j);
 end
+dq(1,:) = zeros(1,frame);
 end

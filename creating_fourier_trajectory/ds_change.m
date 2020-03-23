@@ -1,9 +1,9 @@
-function q = ds_change(path,k,freq,save_path)
+function q = ds_change(path,k,freq,trj_time,save_path)
     sf = strfind(path,'/');
     sf = sf(size(sf,2));
     path = char(path);
     filename = path(sf+1:size(path,2)-4);
-    if nargin < 4
+    if nargin < 5
         save_path = path(1:sf);
     else
         save_path = char(save_path);
@@ -19,7 +19,11 @@ function q = ds_change(path,k,freq,save_path)
     end
     a = file.a;
     b = file.b;
-    TIME = file.TIME/k;
+    if nargin < 4
+        TIME = file.TIME/k;
+    else
+        TIME = trj_time;
+    end
     q0=file.q0;
     w0=file.w0*k;
     t_s=file.t_s/k;
@@ -43,6 +47,7 @@ function q = ds_change(path,k,freq,save_path)
         end
         q(i:N,j)=ones(N-i+1,1)*q(i-1,j);
     end
+    dq(1,:) = zeros(1,frame);
     
     header_string_json = header_json{1};
     for i = 2:length(header_json)
